@@ -6,7 +6,7 @@
 /*   By: naankour <naankour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:46:54 by naankour          #+#    #+#             */
-/*   Updated: 2024/11/27 15:43:20 by naankour         ###   ########.fr       */
+/*   Updated: 2024/11/27 16:22:14 by naankour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*new;
 	size_t	i;
@@ -37,7 +37,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	s2_len = ft_strlen(s2);
 	new = malloc(s1_len + s2_len + 1);
 	if (!new)
+	{
+		free(s1);
 		return (NULL);
+	}
 	i = 0;
 	if (s1)
 	{
@@ -57,6 +60,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		}
 	}
 	new[s1_len + s2_len] = '\0';
+	if (s1)
+		free(s1);
 	return (new);
 }
 
@@ -75,20 +80,20 @@ int	ft_strchr(const char *s, int c)
 		}
 		i++;
 	}
-	if (c == '\0')
-	{
-		return (0);
-	}
 	return (0);
 }
 
-char	*strduperd(const char *src)
+char	*strduperd( char *src)
 {
 	char	*dest;
 	int		i;
 
 	i = 0;
-	dest = (char *)malloc(sizeof (char) * (ft_strlen(src) +1));
+	if (!src || src[0] == '\0')
+	{
+		return(NULL);
+	}
+	dest = (char *)malloc(sizeof (char) * (ft_strlen(src) +2 ));
 	if (!dest)
 	{
 		return (NULL);
@@ -115,13 +120,22 @@ char	*ft_update_buffer(char const *lean, char *buffer)
 	char	*updated_buffer;
 
 	i = 0;
+	while (buffer[i] != '\n' && buffer[i] != '\0')
+		i++;
 	index = ft_strlen(lean);
-	updated_buffer = malloc(sizeof(char) * (ft_strlen(buffer) - index));
+	if (buffer[i] == '\0')
+		return (NULL);
+	i++;
+	updated_buffer = malloc(sizeof(char) * (i- index + 1));
+	if (!updated_buffer)
+		return (NULL);
+	i = 0;
 	while (buffer[index] != '\0')
 	{
 		updated_buffer[i++] = buffer[index++];
 	}
 	updated_buffer[i] = '\0';
+	free(buffer);
 	return (updated_buffer);
 }
 
@@ -132,9 +146,13 @@ char	*get_next_line(int fd)
 	char	*lean;
 	int	r;
 
-	temp = malloc(sizeof (char) * BUFFER_SIZE);
+	temp = malloc(sizeof (char) * (BUFFER_SIZE + 1));
 	if (!temp)
+	{
+		temp = NULL;
+		buffer = NULL;
 		return (NULL);
+	}
 
 	while((!(ft_strchr(buffer, '\n'))))
 	{
@@ -143,9 +161,21 @@ char	*get_next_line(int fd)
 			break ;
 		temp[r] = '\0';
 		buffer = ft_strjoin(buffer, temp);
+		if (!buffer)
+			return NULL;
+	}
+	if (!buffer || buffer[0] == '\0')
+	{
+		buffer = NULL;
+		return (NULL);
 	}
 	lean = strduperd(buffer);
 	buffer = ft_update_buffer(lean, buffer);
+	if (r == 0)
+	{
+		free(buffer);
+		return(NULL);
+	}
 	free(temp);
 	return (lean);
 }
