@@ -6,11 +6,12 @@
 /*   By: naankour <naankour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:46:54 by naankour          #+#    #+#             */
-/*   Updated: 2024/11/27 16:22:14 by naankour         ###   ########.fr       */
+/*   Updated: 2024/12/02 15:21:05 by naankour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
 size_t	ft_strlen(const char *str)
 {
 	size_t	i;
@@ -37,10 +38,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	s2_len = ft_strlen(s2);
 	new = malloc(s1_len + s2_len + 1);
 	if (!new)
-	{
-		free(s1);
 		return (NULL);
-	}
 	i = 0;
 	if (s1)
 	{
@@ -83,7 +81,7 @@ int	ft_strchr(const char *s, int c)
 	return (0);
 }
 
-char	*strduperd( char *src)
+char	*ft_strdup(char *src)
 {
 	char	*dest;
 	int		i;
@@ -93,11 +91,12 @@ char	*strduperd( char *src)
 	{
 		return(NULL);
 	}
-	dest = (char *)malloc(sizeof (char) * (ft_strlen(src) +2 ));
+	if (ft_strchr(src, '\n') == 1)
+	dest = (char *)malloc(sizeof (char) * (ft_strlen(src) + 2 ));
+	if (ft_strchr(src, '\n') == 0)
+	dest = (char *)malloc(sizeof (char) * (ft_strlen(src) + 1 ));
 	if (!dest)
-	{
 		return (NULL);
-	}
 	while (src[i] != '\0' && src[i] != '\n')
 	{
 		dest[i] = src[i];
@@ -112,8 +111,7 @@ char	*strduperd( char *src)
 	return (dest);
 }
 
-
-char	*ft_update_buffer(char const *lean, char *buffer)
+char	*ft_update_buffer(char *buffer)
 {
 	int		i;
 	int		index;
@@ -122,19 +120,24 @@ char	*ft_update_buffer(char const *lean, char *buffer)
 	i = 0;
 	while (buffer[i] != '\n' && buffer[i] != '\0')
 		i++;
-	index = ft_strlen(lean);
 	if (buffer[i] == '\0')
-		return (NULL);
-	i++;
-	updated_buffer = malloc(sizeof(char) * (i- index + 1));
-	if (!updated_buffer)
-		return (NULL);
-	i = 0;
-	while (buffer[index] != '\0')
 	{
-		updated_buffer[i++] = buffer[index++];
+		free (buffer);
+		return (NULL);
 	}
-	updated_buffer[i] = '\0';
+	i++;
+	updated_buffer = malloc(sizeof(char) * ((ft_strlen(buffer)- i+ 1)));
+	if (!updated_buffer)
+	{
+		free (buffer);
+		return (NULL);
+	}
+	index = 0;
+	while (buffer[i] != '\0')
+	{
+		updated_buffer[index++] = buffer[i++];
+	}
+	updated_buffer[index] = '\0';
 	free(buffer);
 	return (updated_buffer);
 }
@@ -143,43 +146,44 @@ char	*get_next_line(int fd)
 {
 	static char	*buffer = NULL;
 	char	*temp;
-	char	*lean;
+	char	*line;
 	int	r;
 
+	if (fd < 0 || BUFFER_SIZE <= 0)
+			return (NULL);
 	temp = malloc(sizeof (char) * (BUFFER_SIZE + 1));
 	if (!temp)
 	{
-		temp = NULL;
-		buffer = NULL;
+		free(temp);
+		free(buffer);
 		return (NULL);
 	}
-
-	while((!(ft_strchr(buffer, '\n'))))
+	while(!(ft_strchr(buffer, '\n')))
 	{
 		r = read(fd, temp, BUFFER_SIZE);
-		if (r == 0)
-			break ;
+		if (r <= 0)
+		{
+			if (r == 0)
+				break;
+			free (buffer);
+			free(temp);
+			buffer = NULL;
+			return NULL;
+		}
 		temp[r] = '\0';
 		buffer = ft_strjoin(buffer, temp);
-		if (!buffer)
-			return NULL;
 	}
+	free (temp);
 	if (!buffer || buffer[0] == '\0')
 	{
-		buffer = NULL;
-		return (NULL);
-	}
-	lean = strduperd(buffer);
-	buffer = ft_update_buffer(lean, buffer);
-	if (r == 0)
-	{
 		free(buffer);
-		return(NULL);
+		buffer = NULL;
+		return NULL;
 	}
-	free(temp);
-	return (lean);
+	line = ft_strdup(buffer);
+	buffer = ft_update_buffer(buffer);
+	return (line);
 }
-
 
 // int	main (void)
 // {
@@ -192,10 +196,14 @@ char	*get_next_line(int fd)
 
 // 	fd = open("testgnl.txt", O_RDONLY);
 // 	if (fd == -1)
-// 		return (1);
+// 	{
+// 		printf("tu sais meme pas ouvrir un fichier la honte");
+// 		return (0);
+// 	}
 // 	while ((line = get_next_line(fd)))
 // 	{
 // 		printf("%s", line);
+// 		free(line);
 // 	}
 // 	// nb_read = -1;
 // 	// count = 0;
