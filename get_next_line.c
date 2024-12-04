@@ -6,7 +6,7 @@
 /*   By: naankour <naankour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:46:54 by naankour          #+#    #+#             */
-/*   Updated: 2024/12/03 15:16:25 by naankour         ###   ########.fr       */
+/*   Updated: 2024/12/04 10:28:51 by naankour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,40 +66,22 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-int	main (void)
-{
+// int	main (void)
+// {
+// 	int	fd;
+// 	char	*line;
 
-	//char	buf[BUFFER_SIZE + 1];
-	int	fd;
-	//int	nb_read;
-	//int	count;
-	char	*line;
-
-	fd = open("testgnl.txt", O_RDONLY);
-	if (fd == -1)
-	{
-		printf("tu sais meme pas ouvrir un fichier la honte");
-		return (0);
-	}
-	while ((line = get_next_line(fd)))
-	{
-		printf("%s", line);
-		free(line);
-	}
-	// nb_read = -1;
-	// count = 0;
-	// while (nb_read != 0)
-	// {
-	// 	nb_read = read(fd, buf, BUFFER_SIZE);
-	// 	if (nb_read == -1)
-	// 	{
-	// 		printf("Erreur de lecture !\n");
-	// 		return (1);
-	// 	}
-	// 	buf[nb_read] = '\0';
-	// 	printf("%s", buf);
-	// 	count ++;
-	// }
-	close(fd);
-	return (0);
-}
+// 	fd = open("testgnl.txt", O_RDONLY);
+// 	if (fd == -1)
+// 	{
+// 		printf("tu sais meme pas ouvrir un fichier la honte");
+// 		return (0);
+// 	}
+// 	while ((line = get_next_line(fd)))
+// 	{
+// 		printf("%s", line);
+// 		free(line);
+// 	}
+// 	close(fd);
+// 	return (0);
+// }

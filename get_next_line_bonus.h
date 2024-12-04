@@ -6,10 +6,9 @@
 /*   By: naankour <naankour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 15:22:30 by naankour          #+#    #+#             */
-/*   Updated: 2024/12/03 15:36:29 by naankour         ###   ########.fr       */
+/*   Updated: 2024/12/04 10:30:42 by naankour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef GET_NEXT_LINE_BONUS_H
 # define GET_NEXT_LINE_BONUS_H
@@ -20,7 +19,7 @@
 # include <stdlib.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE  1
+#  define BUFFER_SIZE 42
 # endif
 
 char	*get_next_line(int fd);

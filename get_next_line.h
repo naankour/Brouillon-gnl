@@ -6,7 +6,7 @@
 /*   By: naankour <naankour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:49:34 by naankour          #+#    #+#             */
-/*   Updated: 2024/12/03 15:17:57 by naankour         ###   ########.fr       */
+/*   Updated: 2024/12/04 10:30:59 by naankour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <stdlib.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE  1
+#  define BUFFER_SIZE 42
 # endif
 
 char	*get_next_line(int fd);
